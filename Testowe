@@ -1,0 +1,87 @@
+MESSAGE
+
+TYPES 
+
+Struct zabawka { 
+
+Enum<4> {"kotek", "mis", "lalka", "samochodzik"}: rodzaj; 
+
+Enum<3> {„niebieski”, „czerwony”, „zolty”}: kolor; 
+
+}; 
+
+ 
+
+Struct art_biur { 
+
+String firma; 
+
+Integer<8> sztuk; 
+
+}; 
+
+ 
+
+Enum<2> {"zabawka", "artykul biurowy"}: typ; 
+
+ 
+
+Struct wyposazenie { 
+
+String: nazwa; 
+
+Choice<typ> co { 
+
+zabawka; 
+
+art_biur; 
+
+}; 
+
+Integer<6> cena; 
+
+}; 
+
+ 
+
+Integer<8>: liczby; 
+
+ 
+
+VALUES 
+
+Wyposazenie element1 = { 
+
+"Kredki", 
+
+"zabawka" { "mis". "zolty" }, 
+
+30 
+
+}; 
+
+ 
+
+Wyposazenie element2 = { 
+
+Nazwa = "Kredki", 
+
+Cena = 30, 
+
+Co =  "artykul biurowy" { 
+
+Sztuk = 30, 
+
+Firma = "Poland" 
+
+} 
+
+}; 
+
+ 
+
+Liczby zmniejsz_ilosc = 25; 
+
+ 
+
+Liczby tablica[element2.co.sztuk - zmniejsz_ilosc] = {1, 5, 7, 3, 2};

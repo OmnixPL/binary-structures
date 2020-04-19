@@ -1,0 +1,25 @@
+MESSAGE
+TYPES
+VALUES
+Struct Enum Choice ident Identyfikator
+
+0 3 4 0.4 -3 00.02
+
+{}[]()<>:;,.+-*/=
+
+"STRING TEST"
+""
+"slowo"
+" spacje "
+"znaki specjalne: {}[]()<>:;,.+-*/="
+"MESSAGE"
+"Dwie
+linijki"
+"Trzy
+dlugie
+linijki"
+"Escape\n\t\r" 
+
+Errors
+ąę
+$#@!
