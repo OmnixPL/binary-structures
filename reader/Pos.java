@@ -1,3 +1,4 @@
+package reader;
 
 public class Pos {
 	int line;

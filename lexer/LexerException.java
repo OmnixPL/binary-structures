@@ -1,3 +1,4 @@
+package lexer;
 public class LexerException extends Exception {
 	// Because of warning: The serializable class LexerException does not 
 	// declare a static final serialVersionUID field of type long

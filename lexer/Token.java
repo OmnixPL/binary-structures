@@ -1,15 +1,19 @@
+package lexer;
+
+import reader.Pos;
+
 public class Token {
-	private TName tokenName;
+	private Tokens tokenName;
 	private String msg;
 	private Pos pos;
 	
-	public Token(TName tokenName, Pos pos, String msg) {
+	public Token(Tokens tokenName, Pos pos, String msg) {
 		this.tokenName = tokenName;
 		this.msg = msg;
 		this.pos = pos;
 	}
 	
-	public TName getTokenName() {
+	public Tokens getTokenName() {
 		return tokenName;
 	}
 

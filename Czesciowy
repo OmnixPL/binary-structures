@@ -29,7 +29,16 @@ String tekst;
 
 VALUES 
 
-Wyposazenie element1 = { 
+liczby xd = 7;
+tekst gadanie = "Krzyzacy";
+ulamek cwierc = 0.25;
+typ klocki = "zabawka";
+artBiur dlugopis = {
+	"Papi",
+	54
+};
+
+Wyposazenie element = { 
 	"Kredki", 
 	"zabawka" { "mis", "zolty" }, 
 	30 
@@ -40,4 +49,5 @@ Ulamek cwierc = 0.25;
 Typ produkt = "zabawka"; 
 Tekst wierszyk = "Hopsasa"; 
 
-Liczby tablica[element2.co.sztuk - zmniejszIlosc] = {1, 5, 7, 3, 2}; 
+
+Liczby tablica[element.co.sztuk - zmniejszIlosc] = {1, 5, 7, 3, 2}; 

@@ -1,7 +1,7 @@
 MESSAGE
 TYPES
 VALUES
-Struct Enum Choice ident Identyfikator
+ident Identyfikator
 
 0 3 4 0.4 -3 00.02
 

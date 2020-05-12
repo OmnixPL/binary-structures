@@ -1,9 +1,13 @@
+package lexer;
 import java.io.IOException;
 import java.util.HashMap;
 
+import reader.CodeReader;
+import reader.Pos;
+
 public class Lexer {
-	private HashMap<Character, TName> singleChar = new HashMap<Character, TName>();
-	private HashMap<String, TName> keywords = new HashMap<String, TName>();
+	private HashMap<Character, Tokens> singleChar = new HashMap<Character, Tokens>();
+	private HashMap<String, Tokens> keywords = new HashMap<String, Tokens>();
 	private CodeReader cr;
 	
 	public Lexer(CodeReader cr) {
@@ -14,7 +18,7 @@ public class Lexer {
 	public Token getNextToken() throws IOException, LexerException {
 		Token token;
 		char current;
-		TName tName;
+		Tokens tName;
 		Pos pos;
 		StringBuilder string;
 		
@@ -39,7 +43,7 @@ public class Lexer {
 				cr.consume();
 			}
 			cr.consume();	// consume " because it signals end of string (usually you don't want to consume unused char) 
-			token = new Token(TName.STRING, pos, string.toString());
+			token = new Token(Tokens.STRING, pos, string.toString());
 		}
 		else if (isazAZ(current)) {							// identifiers
 			string = new StringBuilder();
@@ -54,7 +58,7 @@ public class Lexer {
 			if ( (tName = keywords.get(string.toString().toUpperCase())) != null) {
 				token = new Token(tName, pos, null);	
 			}
-			else token = new Token(TName.IDENTIFIER, pos, string.toString());			
+			else token = new Token(Tokens.IDENTIFIER, pos, string.toString());			
 		}
 		else if (is09(current)) {							// number
 			string = new StringBuilder();
@@ -70,12 +74,12 @@ public class Lexer {
 			try {
 				Integer i;
 				i = Integer.parseInt(string.toString());
-				token = new Token(TName.INT, pos, i.toString());
+				token = new Token(Tokens.INT, pos, i.toString());
 			} catch (NumberFormatException e) {
 				try {
 					Double d;
 					d = Double.parseDouble(string.toString());
-					token = new Token(TName.DOUBLE, pos, d.toString());
+					token = new Token(Tokens.DOUBLE, pos, d.toString());
 				} catch (NumberFormatException e2) {
 					throw new LexerException("Parsing number failed: " + string.toString());
 				}
@@ -83,7 +87,7 @@ public class Lexer {
 			
 		}
 		else if (current == 0xFFFF) {
-			token = new Token(TName.EOF, pos, null);
+			token = new Token(Tokens.EOF, pos, null);
 		}
 		else {
 			cr.consume();
@@ -110,29 +114,26 @@ public class Lexer {
 	}
 	
 	private void populateHashMap() {
-		singleChar.put('{', TName.OPEN_CURLY);
-		singleChar.put('}', TName.CLOSE_CURLY);
-		singleChar.put('<', TName.OPEN_ANGLE);
-		singleChar.put('>', TName.CLOSE_ANGLE);
-		singleChar.put('[', TName.OPEN_SQUARE);
-		singleChar.put(']', TName.CLOSE_SQUARE);
-		singleChar.put('(', TName.OPEN_ROUND);
-		singleChar.put(')', TName.CLOSE_ROUND);
-		singleChar.put('+', TName.ADDITIVE_OP);
-		singleChar.put('-', TName.ADDITIVE_OP);
-		singleChar.put('*', TName.MULTIPLICATIVE_OP);
-		singleChar.put('/', TName.MULTIPLICATIVE_OP);
-		singleChar.put('.', TName.DOT);
-		singleChar.put(',', TName.COMMA);
-		singleChar.put(';', TName.SEMICOLON);
-		singleChar.put(':', TName.COLON);
-		singleChar.put('=', TName.EQUAL);
+		singleChar.put('{', Tokens.OPEN_CURLY);
+		singleChar.put('}', Tokens.CLOSE_CURLY);
+		singleChar.put('<', Tokens.OPEN_ANGLE);
+		singleChar.put('>', Tokens.CLOSE_ANGLE);
+		singleChar.put('[', Tokens.OPEN_SQUARE);
+		singleChar.put(']', Tokens.CLOSE_SQUARE);
+		singleChar.put('(', Tokens.OPEN_ROUND);
+		singleChar.put(')', Tokens.CLOSE_ROUND);
+		singleChar.put('+', Tokens.ADDITIVE_OP);
+		singleChar.put('-', Tokens.ADDITIVE_OP);
+		singleChar.put('*', Tokens.MULTIPLICATIVE_OP);
+		singleChar.put('/', Tokens.MULTIPLICATIVE_OP);
+		singleChar.put('.', Tokens.DOT);
+		singleChar.put(',', Tokens.COMMA);
+		singleChar.put(';', Tokens.SEMICOLON);
+		singleChar.put(':', Tokens.COLON);
+		singleChar.put('=', Tokens.EQUAL);
 		
-		keywords.put("MESSAGE", TName.MESSAGE);
-		keywords.put("TYPES", TName.TYPES);
-		keywords.put("VALUES", TName.VALUES);
-		keywords.put("STRUCT", TName.STRUCT);
-		keywords.put("ENUM", TName.ENUM);
-		keywords.put("CHOICE", TName.CHOICE);
+		keywords.put("MESSAGE", Tokens.MESSAGE);
+		keywords.put("TYPES", Tokens.TYPES);
+		keywords.put("VALUES", Tokens.VALUES);
 	}
 }
