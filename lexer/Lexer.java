@@ -47,7 +47,7 @@ public class Lexer {
 			cr.consume();
 			throw new LexerException("Tokenization failed: " + current);
 		}
-		// TODO this:
+		
 		//System.out.println(token.getTokenName() + " " + token.getPos().getLine() + " " + token.getPos().getColumn() + " >" + token.getMsg() + "< ");
 		
 		return token;

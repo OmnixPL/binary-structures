@@ -2,7 +2,6 @@ package parser.arithmetics;
 
 public class Factor {
 	Factors which;
-	// TODO this may be faulty if bits are bigger than 32
 	Integer number;
 	Variable variable;
 	Expression expression;

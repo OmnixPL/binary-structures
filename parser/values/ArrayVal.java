@@ -25,7 +25,7 @@ public class ArrayVal extends Value {
 		for (int i = 0; i < indents; i++)
 			indent.append(" ");
 		
-		string.append(indent + "⌞" + type.getIdentifier() + " " + identifier + ": "  +  "\n");
+		string.append(indent + "⌞" + type.getIdentifier() + " " + getIdentifier() + ": "  +  "\n");
 		
 		indent.append(" ");
 		indent.append(" ");

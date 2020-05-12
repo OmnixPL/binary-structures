@@ -23,7 +23,7 @@ public class ChoiceVal extends Value {
 		for (int i = 0; i < indents; i++)
 			indent.append(" ");
 		
-		string.append(indent + "⌞" + type.getIdentifier() + " " + identifier + ": "  +  "\n");
+		string.append(indent + "⌞" + type.getIdentifier() + " " + getIdentifier() + ": "  +  "\n");
 		
 		string.append(value.toString(indents + 2));
 		

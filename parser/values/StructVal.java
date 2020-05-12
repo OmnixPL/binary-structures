@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import parser.types.NewStruct;
 import parser.types.Types;
 
-// TODO sprawdz WE WSZYSTKICH KLASACH czy kolejnosc argumentow w konstruktorze jest taka sama 
 public class StructVal extends Value {
 	NewStruct type;
 	ArrayList<Value> values;
@@ -23,7 +22,7 @@ public class StructVal extends Value {
 		for (int i = 0; i < indents; i++)
 			indent.append(" ");
 		
-		string.append(indent + "⌞" + type.getIdentifier() + " " + identifier + ": "  +  "\n");
+		string.append(indent + "⌞" + type.getIdentifier() + " " + getIdentifier() + ": "  +  "\n");
 		
 		for (Value value: values)
 			string.append(value.toString(indents + 2));

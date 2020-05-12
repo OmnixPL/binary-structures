@@ -20,7 +20,7 @@ public class IntegerVal extends Value {
 		for (int i = 0; i < indents; i++)
 			indent.append(" ");
 		
-		string.append(indent + "⌞" + type.getIdentifier() + " " + identifier + ": " + value +  "\n");
+		string.append(indent + "⌞" + type.getIdentifier() + " " + getIdentifier() + ": " + value +  "\n");
 		return string.toString();
 	}
 }

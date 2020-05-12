@@ -13,4 +13,14 @@ public class MsgTree {
 		values = new ArrayList<Value>();
 	}
 
+	public void printTree() {
+		System.out.println("------------- TYPES");
+		for (Type type : types)
+			System.out.println(type.toString(0));
+		
+
+		System.out.println("------------- VALUES");
+		for (Value value: values)
+			System.out.println(value.toString(0));
+	}
 }

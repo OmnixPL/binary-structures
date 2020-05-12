@@ -27,10 +27,6 @@ import parser.values.StringVal;
 import parser.values.StructVal;
 import parser.values.Value;
 
-// TODO add check if identifier isnt used yet (but can be a keyword like Double ;) )
-// TODO check if choice values are actual types
-// TODO DODAJ OBOSTRZENIE ZE BITOW W INCIE NIE MOZE BYC WIECEJ NIZ 32 I BEDZIESZ MIAL LATWO XD
-// TODO ARITHMETIC PRINTOUT DUDE
 public class Parser {
 	private Lexer lexer;
 	private MsgTree tree;
@@ -42,18 +38,19 @@ public class Parser {
 	}
 	
 	public int buildParseTree() {
-		consumeToken(); // actually initialize
-		
-		// parse "MESSAGE" header
-		if (currenToken.getTokenName() != Tokens.MESSAGE) 
-			return -1;
-		consumeToken();
 		try {
+			consumeToken(); // actually initialize
+			
+			// parse "MESSAGE" header
+			if (currenToken.getTokenName() != Tokens.MESSAGE) 
+				return -1;
+			consumeToken();
 			parseTypes();
 			parseValues();
 		} catch (ParserException e) {
 			System.out.println(e);
 		}
+		tree.printTree();
 		return 0;
 	}
 	
@@ -64,18 +61,12 @@ public class Parser {
 			return -1;
 		consumeToken();
 		
-		// TODO MAYBE MOVE THIS BLOCK TO PARSETREE
-		// parse built-in type name
-		
 		while (currenToken.getTokenName() == Tokens.IDENTIFIER) {
 			if ( (type = parseType()) != null)
 				tree.types.add(type);
 			else break;
 		}
 		
-		System.out.println("--- TYPES FINISHED");
-		for (Type type2 : tree.types)
-			System.out.println(type2.toString(0));
 		return 0;
 	}
 	
@@ -93,8 +84,13 @@ public class Parser {
 			type = parseStruct();
 		else if (currenToken.getMsg().equalsIgnoreCase("Choice"))
 			type = parseChoice();
-		// TODO add nested ???
-		// TODO MAYBE else throw parser exception "type not found?"?
+		else 
+			throwMessageExpected("parse type", "built-in type (Integer, Double, etc.)");
+		
+		for (Type type2 : tree.types) {
+			if (type2.getIdentifier().equalsIgnoreCase(type.getIdentifier()))
+				throwMessage("parse type", "Type with the same name already exists");
+		}
 		
 		return type;
 	}
@@ -118,7 +114,6 @@ public class Parser {
 		
 		String identifier = parseTypeName();
 		
-		System.out.println("New Integer " + bits.toString() + " : " + identifier);
 		return new NewInteger(identifier, bits);
 	}
 	
@@ -126,7 +121,6 @@ public class Parser {
 		consumeToken();
 		String identifier = parseTypeName();
 		
-		System.out.println("New Double: " + identifier);
 		return new NewDouble(identifier);
 	}
 	
@@ -157,7 +151,6 @@ public class Parser {
 		
 		String identifier = parseTypeName();
 		
-		System.out.println("New Enum with " + values.size() + " enumerators: " + identifier);
 		return new NewEnum(identifier, values);
 	}
 	
@@ -166,7 +159,6 @@ public class Parser {
 		
 		String identifier = parseTypeName();
 		
-		System.out.println("New String: " + identifier);
 		return new NewString(identifier);
 	}
 	
@@ -180,9 +172,9 @@ public class Parser {
 			throwMessageExpected("struct type", "{");
 		consumeToken();
 		
-		while (true) {
+		while (currenToken.getTokenName() != Tokens.CLOSE_CURLY ) {
 			type = parseType();
-			if (type != null) // TODO hehe
+			if (type != null)
 				members.add(type);
 			else 
 				break;
@@ -194,10 +186,9 @@ public class Parser {
 
 		String identifier = parseTypeName();
 		
-		System.out.println("New Struct with " + members.size() + " types: " + identifier);
 		return new NewStruct(identifier, members);
 	}
-	
+
 	private NewChoice parseChoice() throws ParserException {
 		NewEnum newEnum;
 		ArrayList<String> values = new ArrayList<String>();
@@ -215,8 +206,7 @@ public class Parser {
 		consumeToken();
 		
 		if ( (newEnum = findEnumByName(enumName)) == null)
-			// TODO not expected but other
-			return null;
+			throwMessage("parse choice", "Name does not identify an enum type");
 		
 		if (currenToken.getTokenName() != Tokens.CLOSE_ANGLE)
 			throwMessageExpected("choice type", ">");
@@ -230,8 +220,7 @@ public class Parser {
 			throwMessageExpected("choice type", "type name");
 		do {
 			if ( findTypeByName(currenToken.getMsg()) == null)
-				// TODO OBVIOUSLY
-				return null;
+				throwMessage("parse choice", "Name does not identify a type");
 			
 			values.add(currenToken.getMsg());
 			consumeToken();
@@ -251,7 +240,6 @@ public class Parser {
 		if (values.size() != newEnum.getValues().size())
 			throwMessageExpected("choice type", "the same number of types as enumerators in enum");
 		
-		System.out.println("New Choice");
 		return new NewChoice(identifier, newEnum, values);
 	}
 	
@@ -301,10 +289,6 @@ public class Parser {
 				tree.values.add(value);
 			else break;
 		}
-
-		System.out.println("--- VALUES FINISHED");
-		for (Value value2: tree.values)
-			System.out.println(value2.toString(0));
 		return 0;
 	}
 	
@@ -342,7 +326,6 @@ public class Parser {
 		return value;
 	}
 	
-	// TODO NIE ZWRACA NIC NA RAZIE
 	private ArrayVal parseArrayVal(String identifier, Type type) throws ParserException {
 		ArrayList<Value> values = new ArrayList<Value>();
 		Value value;
@@ -352,7 +335,6 @@ public class Parser {
 			return null;	// NO ARRAY - NOT AN ERROR
 		consumeToken();
 		
-		// TODO arithmetics are fucking muda
 		elementsNo = parseArithmetic();
 		
 		if (currenToken.getTokenName() != Tokens.CLOSE_SQUARE)
@@ -360,17 +342,17 @@ public class Parser {
 		consumeToken();
 		
 		if (currenToken.getTokenName() != Tokens.EQUAL)
-			throwMessageExpected("parse value", "=");
+			throwMessageExpected("parse array", "=");
 		consumeToken();
 		
 		if (currenToken.getTokenName() != Tokens.OPEN_CURLY)
-			throwMessageExpected("parse value", "{");
+			throwMessageExpected("parse array", "{");
 		consumeToken();
 		
 		while (true) {
 			value = parseRightHand(identifier, type); 
 			if (value == null)
-				return null;
+				throwMessage("parse array", "Unknown error while parsing right hand. Should never happen.");
 			values.add(value);
 			
 			if (currenToken.getTokenName() != Tokens.COMMA)
@@ -379,23 +361,22 @@ public class Parser {
 		}
 		
 		if (currenToken.getTokenName() != Tokens.CLOSE_CURLY)
-			throwMessageExpected("parse value", "}");
+			throwMessageExpected("parse array", "}");
 		consumeToken();
 		
 		if (currenToken.getTokenName() != Tokens.SEMICOLON)
-			throwMessageExpected("parse value", ";");
+			throwMessageExpected("parse array", ";");
 		consumeToken();
 		
 		return new ArrayVal(type, identifier, values, elementsNo);
 	}
 	
-	// TODO idk if this should return Expression or evaluate it already?
-	private Expression parseArithmetic() {
+	// idk if this should return Expression or evaluate it already?
+	private Expression parseArithmetic() throws ParserException {
 		return parseExpression();
 	}
 	
-	// TODO NIE MA REAKCJI NA NULLE
-	private Expression parseExpression() {
+	private Expression parseExpression() throws ParserException {
 		ArrayList<Character> operators = new ArrayList<Character>();
 		ArrayList<Term> terms = new ArrayList<Term>();
 		terms.add(parseTerm());
@@ -410,8 +391,7 @@ public class Parser {
 		return new Expression(terms, operators);
 	}
 
-	// TODO NIE MA REAKCJI NA NULLE
-	private Term parseTerm() {
+	private Term parseTerm() throws ParserException {
 		ArrayList<Character> operators = new ArrayList<Character>();
 		ArrayList<Factor> factors = new ArrayList<Factor>();
 		factors.add(parseFactor());
@@ -426,9 +406,11 @@ public class Parser {
 		return new Term(factors, operators);
 	}
 	
-	// TODO NIE MA REAKCJI NA NULLE
-	private Factor parseFactor() {
-		Factor factor;
+	private Factor parseFactor() throws ParserException {
+		Factor factor = null; 
+		// compiler doesn't notice that throw... method is used as macro for quick message construction
+		// and warns about value being not initialized but it should never be null
+		
 		if (currenToken.getTokenName() == Tokens.INT) {
 			Integer integer = Integer.parseInt(currenToken.getMsg());
 			consumeToken();
@@ -443,23 +425,23 @@ public class Parser {
 			Expression expression = parseExpression();
 			
 			if (currenToken.getTokenName() != Tokens.CLOSE_ROUND)
-				return null;
+				throwMessageExpected("parse factor", ")");
 			consumeToken();
 			factor = new Factor(expression);
 		}
-		else factor = null;
+		else 
+			throwMessageExpected("parse factor", "integer, variable or expression");
 		
 		return factor;
 	}
 	
-	// TODO NIE MA REAKCJI NA NULLE
-	// TODO nie sprawdza czy to serio są inty ani czy istnieja 
-	private Variable parseVariable() {
+	// doesnt check if this ends in int or if the path is correct at all
+	private Variable parseVariable() throws ParserException {
 		ArrayList<String> identifiers = new ArrayList<String>();
 		
 		while (true) {
 			if (currenToken.getTokenName() != Tokens.IDENTIFIER)
-				return null;	
+				throwMessageExpected("parse variable", "identifier");
 			
 			identifiers.add(currenToken.getMsg());
 			consumeToken();
@@ -486,7 +468,9 @@ public class Parser {
 	}
 
 	private Value parseRightHand(String identifier, Type type) throws ParserException {
-		Value value = null;
+		Value value = null;	
+		// compiler doesn't notice that throw... method is used as macro for quick message construction
+		// and warns about value being not initialized but it should never be null
 		
 		if (type.getType() == Types.INTEGER)
 			value = parseIntegerVal(identifier, type);
@@ -500,23 +484,35 @@ public class Parser {
 			value =  parseStructVal(identifier, type);
 		else if (type.getType() == Types.CHOICE)
 			value =  parseChoiceVal(identifier, type);
+		else 
+			throwMessageExpected("parse right hand", "some type of value");
 		
 		return value;
 	}
 	
-	private IntegerVal parseIntegerVal(String identifier, Type type) {
+	private IntegerVal parseIntegerVal(String identifier, Type type) throws ParserException {
+		if (currenToken.getTokenName() != Tokens.INT)
+			throwMessageExpected("parse integer value", "integer");
+			
 		Integer value = Integer.parseInt(currenToken.getMsg());
+		
 		consumeToken();
 		return new IntegerVal((NewInteger)type, identifier, value);
 	}
 	
-	private StringVal parseStringVal(String identifier, Type type) {
+	private StringVal parseStringVal(String identifier, Type type) throws ParserException {
+		if (currenToken.getTokenName() != Tokens.STRING)
+			throwMessageExpected("parse string value", "string");
+		
 		String value = currenToken.getMsg();
 		consumeToken();
 		return new StringVal((NewString)type, identifier, value);
 	}
 	
-	private DoubleVal parseDoubleVal(String identifier, Type type) {
+	private DoubleVal parseDoubleVal(String identifier, Type type) throws ParserException {
+		if (currenToken.getTokenName() != Tokens.DOUBLE)
+			throwMessageExpected("parse double value", "double");
+		
 		Double value = Double.parseDouble(currenToken.getMsg());
 		consumeToken();
 		return new DoubleVal((NewDouble)type, identifier, value);
@@ -525,6 +521,10 @@ public class Parser {
 	// checks if string actually exists in enum
 	private EnumVal parseEnumVal(String identifier, Type type) throws ParserException {
 		NewEnum typeEnum = (NewEnum) type;
+		
+		if (currenToken.getTokenName() != Tokens.STRING)
+			throwMessageExpected("parse enum value", "enumerator");
+
 		String value = currenToken.getMsg();
 		consumeToken();
 		
@@ -547,7 +547,7 @@ public class Parser {
 			Type type = typeStruct.getMembers().get(i);
 			value = parseRightHand(type.getIdentifier(), type);
 			if (value.getTypeName() != type.getType())
-				return null;
+				throwMessageExpected("parse struct value", "same value type as struct member type");
 			values.add(value);
 			
 			if (currenToken.getTokenName() != Tokens.COMMA)
@@ -604,17 +604,17 @@ public class Parser {
 		Value value = parseRightHand(type.getIdentifier(), type);
 		
 		if (value == null)
-			return null;
+			throwMessage("parse choice value", "Unknown error while parsing right hand. Should never happen.");
 		
 		return new ChoiceVal(typeChoice, identifier, typeChoice, value);
 	}
 	
 // ----------------------- OTHER
-	private int consumeToken() {		
+	private int consumeToken() throws ParserException {		
 		try {
 			currenToken = lexer.getNextToken();
 		} catch (LexerException e) {
-			return -1;		// TODO choose what to do when LexerException is thrown
+			throwMessage("consume token", "Lexer failed");
 		} catch (IOException e) {
 			return -1;
 		}
@@ -624,6 +624,11 @@ public class Parser {
 	
 	private void throwMessageExpected(String method, String expected) throws ParserException{
 		throw new ParserException("Error parsing " + method + ". Expected: " + expected + " at line: " 
+				+ currenToken.getPos().getLine() + " column: " + currenToken.getPos().getColumn());		
+	}
+	
+	private void throwMessage(String method, String msg) throws ParserException{
+		throw new ParserException("Error in " + method + ". Message: " + msg + ". At line: " 
 				+ currenToken.getPos().getLine() + " column: " + currenToken.getPos().getColumn());		
 	}
 }

@@ -13,7 +13,6 @@ import lexer.Token;
 import reader.CodeReader;
 import reader.Pos;
 
-// TODO : is probably useless right now, but delete it only after everything is okay
 public class Encode {
 	public static void main(String[] args) {
 		//noParser(args);
