@@ -19,7 +19,7 @@ public class NewChoice extends Type {
 		for (int i = 0; i < indents; i++)
 			indent.append(" ");
 		
-		string.append(indent + "⌞" + getType() + ": " + getIdentifier() + " chosen by: " + choice +  "\n");
+		string.append(indent + "⌞" + getType() + ": " + getIdentifier() + " chosen by: " + choice.getIdentifier() +  "\n");
 		
 		indent.append(" ");
 		indent.append(" ");

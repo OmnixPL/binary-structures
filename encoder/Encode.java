@@ -11,7 +11,6 @@ import lexer.Tokens;
 import parser.Parser;
 import lexer.Token;
 import reader.CodeReader;
-import reader.FileCodeReader;
 import reader.Pos;
 
 // TODO : is probably useless right now, but delete it only after everything is okay
@@ -28,7 +27,7 @@ public class Encode {
 		Parser parser;
 		
 		try (BufferedReader bf = new BufferedReader(new FileReader(args[0]))) {
-			cr = new FileCodeReader(bf);
+			cr = new CodeReader(bf);
 			lexer = new Lexer(cr);
 			parser = new Parser(lexer);
 			
@@ -54,7 +53,7 @@ public class Encode {
 		
 		// parser placeholder
 		try (BufferedReader bf = new BufferedReader(new FileReader(args[0]))) {
-			cr = new FileCodeReader(bf);
+			cr = new CodeReader(bf);
 			lexer = new Lexer(cr);
 			
 			for (@SuppressWarnings("unused")	int i = 0 ; ; i++) {

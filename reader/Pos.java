@@ -22,18 +22,18 @@ public class Pos {
 	}
 	
 	@Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Pos pos = (Pos) o;
-        if (line != pos.line)
-        	return false;
-        if (column != pos.column)
-        	return false;
-        return true;
-    }
+	public boolean equals(Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		Pos pos = (Pos) o;
+		if (line != pos.line)
+			return false;
+		if (column != pos.column)
+			return false;
+		return true;
+	}
 }

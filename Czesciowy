@@ -50,4 +50,8 @@ Typ produkt = "zabawka";
 Tekst wierszyk = "Hopsasa"; 
 
 
-Liczby tablica[element.co.sztuk - zmniejszIlosc] = {1, 5, 7, 3, 2}; 
+Liczby tablica[element.co.sztuk - zmniejszIlosc] = {1, 5, 7, 3, 2};
+
+Liczby tab[30 - (2*5)] = {1};
+
+Liczby taba[30 - zmniejszIlosc] = {1};

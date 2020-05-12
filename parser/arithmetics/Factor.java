@@ -27,4 +27,24 @@ public class Factor {
 		variable = null;
 		this.expression = expression;
 	}
+	
+	public String toString(int indents) {
+		StringBuilder string = new StringBuilder();
+		StringBuilder indent = new StringBuilder();
+		
+		for (int i = 0; i < indents; i++)
+			indent.append(" ");
+		
+		if (which == Factors.EXPRESSION) {
+			string.append(indent + "⌞\n" + expression.toString(indents + 2));			
+		}
+		else if (which == Factors.VARIABLE) {			
+			string.append(indent + "⌞\n" + variable.toString(indents + 2));
+		}
+		else if (which == Factors.NUMBER) {			
+			string.append(indent + "⌞" + number + "\n");
+		}
+
+		return string.toString();
+	}
 }
