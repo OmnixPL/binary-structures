@@ -27,6 +27,11 @@ Integer<8> liczby;
 Double ulamek; 
 String tekst; 
 
+Choice<typ> { 
+		zabawka; 
+		artBiur; 
+} choiceNaZewnatrz; 
+
 VALUES 
 
 liczby xd = 7;
@@ -44,6 +49,8 @@ Wyposazenie element = {
 	30 
 }; 
 
+choiceNaZewnatrz dziala = "zabawka" { "mis", "zolty" };
+
 Liczby zmniejszIlosc = 25; 
 Ulamek cwierc = 0.25; 
 Typ produkt = "zabawka"; 
@@ -55,3 +62,21 @@ Liczby tablica[element.co.sztuk - zmniejszIlosc] = {1, 5, 7, 3, 2};
 Liczby tab[30 * (5-2)] = {1};
 
 Liczby taba[30 - zmniejszIlosc] = {1};
+
+wyposazenie tabStructow[3] =  {
+	{ 
+		"Wyscigowka", 
+		"zabawka" { "samochodzik", "niebieski" }, 
+		30 
+	}, 
+	{ 
+		"Mazaki", 
+		"artykul biurowy" { "SA", 14 }, 
+		30 
+	}, 
+	{ 
+		"Puchatek", 
+		"zabawka" { "mis", "zolty" }, 
+		30 
+	}
+};

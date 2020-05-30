@@ -592,9 +592,10 @@ public class Parser {
 		String typeName = typeChoice.getValues().get(index);
 		Type type = null;
 		for (Type type2: tree.types) {
-			if (type2.getIdentifier().equalsIgnoreCase(typeName))
+			if (type2.getIdentifier().equalsIgnoreCase(typeName)) {
 				type = type2;
 				break;
+			}
 		}
 		
 		if (type == null)
@@ -631,4 +632,9 @@ public class Parser {
 		throw new ParserException("Error in " + method + ". Message: " + msg + ". At line: " 
 				+ currenToken.getPos().getLine() + " column: " + currenToken.getPos().getColumn());		
 	}
+	
+	public MsgTree getTree() {
+		return tree;
+	}
+
 }

@@ -1,0 +1,46 @@
+MESSAGE 
+
+TYPES 
+
+Struct { 
+	Enum {"kotek", "mis", "lalka", "samochodzik"} rodzaj; 
+	Enum {"niebieski", "czerwony", "zolty"} kolor; 
+} zabawka; 
+
+Struct { 
+	String firma; 
+	Integer<8> sztuk; 
+} artBiur; 
+
+Enum {"zabawka", "artykul biurowy"} typ; 
+
+Struct { 
+	String nazwa;
+	Choice<typ> { 
+		zabawka; 
+		artBiur; 
+	} co; 
+	Integer<6> cena; 
+} wyposazenie; 
+
+Choice<typ> { 
+		zabawka; 
+		artBiur; 
+} co; 
+
+VALUES 
+
+co xd = "zabawka" { "mis", "zolty" };
+
+typ klocki = "zabawka";
+artBiur dlugopis = {
+	"Papi",
+	54
+};
+
+Wyposazenie element = { 
+	"Kredki", 
+	"zabawka" { "mis", "zolty" }, 
+	30 
+}; 
+
