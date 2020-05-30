@@ -4,7 +4,6 @@ import parser.types.NewDouble;
 import parser.types.Types;
 
 public class DoubleVal extends Value {
-	NewDouble type;
 	Double value;
 
 	public DoubleVal(NewDouble type, String identifier, Double value) {
@@ -23,4 +22,9 @@ public class DoubleVal extends Value {
 		string.append(indent + "⌞" + type.getIdentifier() + " " + getIdentifier() + ": " + value +  "\n");
 		return string.toString();
 	}
+
+	public Double getValue() {
+		return value;
+	}
+	
 }

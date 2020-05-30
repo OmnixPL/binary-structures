@@ -19,4 +19,8 @@ public class NewInteger extends Type {
 		
 		return string.toString();
 	}
+
+	public int getBits() {
+		return bits;
+	}
 }

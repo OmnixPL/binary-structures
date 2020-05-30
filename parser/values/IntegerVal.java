@@ -4,7 +4,6 @@ import parser.types.NewInteger;
 import parser.types.Types;
 
 public class IntegerVal extends Value {
-	NewInteger type;
 	Integer value;
 
 	public IntegerVal(NewInteger type, String identifier, Integer value) {
@@ -22,5 +21,9 @@ public class IntegerVal extends Value {
 		
 		string.append(indent + "⌞" + type.getIdentifier() + " " + getIdentifier() + ": " + value +  "\n");
 		return string.toString();
+	}
+
+	public Integer getValue() {
+		return value;
 	}
 }

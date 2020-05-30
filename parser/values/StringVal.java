@@ -23,4 +23,12 @@ public class StringVal extends Value {
 		string.append(indent + "⌞" + type.getIdentifier() + " " + getIdentifier() + ": " + value +  "\n");
 		return string.toString();
 	}
+
+	public NewString getType() {
+		return type;
+	}
+
+	public String getValue() {
+		return value;
+	}
 }

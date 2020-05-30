@@ -5,7 +5,6 @@ import parser.types.Type;
 import parser.types.Types;
 
 public class ChoiceVal extends Value {
-	NewChoice type;
 	Type choice;
 	Value value;
 
@@ -28,5 +27,13 @@ public class ChoiceVal extends Value {
 		string.append(value.toString(indents + 2));
 		
 		return string.toString();
+	}
+
+	public Type getChoice() {
+		return choice;
+	}
+
+	public Value getValue() {
+		return value;
 	}
 }

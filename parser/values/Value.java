@@ -1,9 +1,11 @@
 package parser.values;
 
+import parser.types.Type;
 import parser.types.Types;
 
 public class Value {
 	private Types typeName;	// struct, integer etc
+	Type type;
 	private String identifier;
 	
 	public Value(String identifier, Types typeName) {
@@ -22,6 +24,8 @@ public class Value {
 	public Types getTypeName() {
 		return typeName;
 	}
-	
-	
+
+	public Type getType() {
+		return type;
+	}
 }

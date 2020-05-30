@@ -23,4 +23,12 @@ public class MsgTree {
 		for (Value value: values)
 			System.out.println(value.toString(0));
 	}
+
+	public ArrayList<Type> getTypes() {
+		return types;
+	}
+
+	public ArrayList<Value> getValues() {
+		return values;
+	}
 }

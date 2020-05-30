@@ -4,7 +4,6 @@ import parser.types.NewEnum;
 import parser.types.Types;
 
 public class EnumVal extends Value {
-	NewEnum type;
 	String value;
 
 	public EnumVal(NewEnum type, String identifier, String value) {
@@ -22,5 +21,9 @@ public class EnumVal extends Value {
 		
 		string.append(indent + "⌞" + type.getIdentifier() + " " + getIdentifier() + ": " + value +  "\n");
 		return string.toString();
+	}
+
+	public String getValue() {
+		return value;
 	}
 }

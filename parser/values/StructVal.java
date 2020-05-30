@@ -6,7 +6,6 @@ import parser.types.NewStruct;
 import parser.types.Types;
 
 public class StructVal extends Value {
-	NewStruct type;
 	ArrayList<Value> values;
 
 	public StructVal(NewStruct type, String identifier, ArrayList<Value> values) {
@@ -28,5 +27,9 @@ public class StructVal extends Value {
 			string.append(value.toString(indents + 2));
 		
 		return string.toString();
+	}
+
+	public ArrayList<Value> getValues() {
+		return values;
 	}
 }

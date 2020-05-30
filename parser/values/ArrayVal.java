@@ -7,7 +7,6 @@ import parser.types.Type;
 import parser.types.Types;
 
 public class ArrayVal extends Value {
-	Type type;
 	ArrayList<Value> values;
 	Expression elementsNo;
 	
