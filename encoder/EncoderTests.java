@@ -31,6 +31,17 @@ class EncoderTests {
 		assertIterableEquals(expected, output);
 	}
 	
+	@Test
+	void testCompressBits() {
+		ArrayList<Byte> input = new ArrayList<Byte>(List.of(
+				(byte)1, (byte)1, (byte)0, (byte)1, (byte)0, (byte)1, (byte)0, (byte)1,
+				(byte)1, (byte)1, (byte)1, (byte)1));
+		ArrayList<Byte> expected = new ArrayList<Byte>(List.of(
+				(byte)213, (byte)240));
+		ArrayList<Byte> output = Encoder.compressBits(input);
+		assertIterableEquals(expected, output);
+	}
+	
 	@Nested
 	class EncodingTypes {
 		@Test

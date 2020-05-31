@@ -39,8 +39,11 @@ public class Term {
 			right = factors.get(i).evaluate(tree);
 			if (operators.get(i - 1).equals('*'))
 				left *= right;
-			else if (operators.get(i - 1).equals('/'))
+			else if (operators.get(i - 1).equals('/')) {
+				if (right == 0)
+					throw new ArrayArithmeticException("Trying to divide when right factor equals to zero");
 				left /= right;
+			}
 		}
 		return left;
 	}

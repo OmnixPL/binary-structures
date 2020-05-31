@@ -45,13 +45,13 @@ artBiur dlugopis = {
 
 Wyposazenie element = { 
 	"Kredki", 
-	"zabawka" { "mis", "zolty" }, 
+	"artykul biurowy" { "Hop", 12 }, 
 	30 
 }; 
 
 choiceNaZewnatrz dziala = "zabawka" { "mis", "zolty" };
 
-Liczby zmniejszIlosc = 25; 
+Liczby zmniejszIlosc = 6; 
 Ulamek cwierc = 0.25; 
 Typ produkt = "zabawka"; 
 Tekst wierszyk = "Hopsasa"; 

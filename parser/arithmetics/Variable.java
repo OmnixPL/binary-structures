@@ -89,10 +89,10 @@ public class Variable {
 			return integerVal.getValue();			
 		}
 		else if (newStruct.getMembers().get(j).getType() == Types.STRUCT) {
-			return evaluateStruct(structVal, identifiersIndex + 1);
+			return evaluateStruct(structVal.getValues().get(j), identifiersIndex + 1);
 		}
 		else if (newStruct.getMembers().get(j).getType() == Types.CHOICE)
-			return evaluateChoice(structVal, identifiersIndex + 1);
+			return evaluateChoice(structVal.getValues().get(j), identifiersIndex + 1);
 		else 
 			throw new ArrayArithmeticException("Identifier is not followable (struct, choice) or int.");
 	}
@@ -104,10 +104,10 @@ public class Variable {
 			return integerVal.getValue();
 		}
 		else if (choiceVal.getChosenType().getType() == Types.STRUCT) {
-			return evaluateStruct(choiceVal.getValue(), identifiersIndex + 1);
+			return evaluateStruct(choiceVal.getValue(), identifiersIndex );
 		}
 		else if (choiceVal.getChosenType().getType() == Types.CHOICE)
-			return evaluateChoice(choiceVal.getValue(), identifiersIndex + 1);
+			return evaluateChoice(choiceVal.getValue(), identifiersIndex );
 		else 
 			throw new ArrayArithmeticException("Identifier is not followable (struct, choice) or int.");	
 	}
