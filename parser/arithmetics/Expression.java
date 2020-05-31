@@ -2,6 +2,8 @@ package parser.arithmetics;
 
 import java.util.ArrayList;
 
+import parser.MsgTree;
+
 public class Expression {
 	ArrayList<Term> terms;
 	ArrayList<Character> operators;
@@ -27,5 +29,18 @@ public class Expression {
 		string.append(indent + "⌞\n" + terms.get(i).toString(indents + 2));
 
 		return string.toString();
+	}
+	
+	public double evaluate(MsgTree tree) throws ArrayArithmeticException {
+		double left = terms.get(0).evaluate(tree);
+		double right = 0;
+		for (int i = 1; i < terms.size(); i++) {
+			right = terms.get(i).evaluate(tree);
+			if (operators.get(i - 1).equals('-'))
+				left -= right;
+			else if (operators.get(i - 1).equals('+'))
+				left += right;
+		}
+		return left;
 	}
 }

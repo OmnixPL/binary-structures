@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import lexer.Lexer;
 import parser.MsgTree;
 import parser.Parser;
+import parser.arithmetics.ArrayArithmeticException;
 import parser.types.*;
 import parser.values.*;
 import reader.CodeReader;
@@ -20,11 +21,8 @@ public class Encoder {
 	
 	public static void main(String[] args) {
 		Encoder encoder = new Encoder();
-		encoder.encode(args[0]);
+		encoder.encode(args[0]);			
 	}
-
-//	public static void main(String[] args) {
-//	}
 	
 	ArrayList<Byte> encode(String filename) {
 		ArrayList<Byte> result = new ArrayList<Byte>();
@@ -33,7 +31,6 @@ public class Encoder {
 		
 		buildTree(filename);
 		
-		// TODO throw?
 		if (tree == null)
 			return null;
 
@@ -42,8 +39,13 @@ public class Encoder {
 												// but size returns number of elements, not highest index, so it evens out
 		
 		appendByte(result, typesNo);
-		types = encodeTypes(tree.getTypes());
-		values = encodeValues(tree.getValues());
+		try {
+			types = encodeTypes(tree.getTypes());
+			values = encodeValues(tree.getValues());			
+		}
+		catch (EncoderException e) {
+			e.printStackTrace();
+		}
 		
 		result.addAll(types);
 		result.addAll(values);
@@ -155,12 +157,15 @@ public class Encoder {
 		return list;
 	}
 	
-	private ArrayList<Byte> encodeValues(ArrayList<Value> values) {
+	private ArrayList<Byte> encodeValues(ArrayList<Value> values) throws EncoderException {
 		ArrayList<Byte> list = new ArrayList<Byte>();
 		
 		for (Value value : values) {
 			int i = getTypeIndex(value.getType());
-			appendTypeNo(list, i);
+			if (value.getTypeName() == Types.ARRAY)
+				appendTypeNo(list, -1);
+			else
+				appendTypeNo(list, i);
 			if (value.getTypeName() == Types.INTEGER)
 				list.addAll(encodeIntegerVal(value));
 			else if (value.getTypeName() == Types.DOUBLE)
@@ -173,7 +178,8 @@ public class Encoder {
 				list.addAll(encodeStructVal(value));
 			else if (value.getTypeName() == Types.CHOICE)
 				list.addAll(encodeChoiceVal(value));
-//			else TODO throw something?
+			else if (value.getTypeName() == Types.ARRAY)
+				list.addAll(encodeArrayVal(value));
 		}
 		
 		return list;
@@ -195,7 +201,6 @@ public class Encoder {
 				list.addAll(encodeStructVal(value));
 			else if (value.getTypeName() == Types.CHOICE)
 				list.addAll(encodeChoiceVal(value));
-//			else TODO throw something?
 		}
 		
 		return list;
@@ -275,7 +280,34 @@ public class Encoder {
 		return list;
 	}
 	
-	// TODO jeszcze tablica
+	private ArrayList<Byte> encodeArrayVal(Value superValue) throws EncoderException {
+		ArrayList<Byte> list = new ArrayList<Byte>();
+		ArrayVal value = (ArrayVal)superValue;
+		
+		int size;
+		try {
+			size = (int) value.getElementsNo().evaluate(tree);
+		} catch (ArrayArithmeticException e) {
+			e.printStackTrace();
+			throw new EncoderException("ArrayArithmeticException caught");
+		}
+		
+		if (size < value.getValues().size())
+			throw new EncoderException("Array size is too small for elements provided");
+		
+		appendByte(list, size);
+		
+		int i;
+		for (i = 0; i < tree.getTypes().size(); i++)
+			if (tree.getTypes().get(i).getIdentifier().equalsIgnoreCase(value.getType().getIdentifier()))
+				break;
+		
+		appendTypeNo(list, i);
+		
+		list.addAll(encodeValuesNoTypeIndex(value.getValues()));
+		
+		return list;
+	}
 	
 	private MsgTree buildTree(String filename) {
 		CodeReader cr;

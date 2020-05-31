@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
@@ -19,110 +18,6 @@ import parser.types.NewStruct;
 import parser.types.Type;
 
 class EncoderTests {
-
-	@Test
-	@Disabled
-	void testEncode() {
-		Encoder encoder = new Encoder();
-		
-		ArrayList<Byte> expected = new ArrayList<Byte>(List.of(
-				// number of types: 2
-				(byte)0, (byte)0, (byte)0, (byte)0,
-				(byte)0, (byte)0, (byte)1, (byte)0,
-				
-				// start struct zabawka
-				(byte)1, (byte)0, (byte)1,
-					// enum rodzaj
-					(byte)0, (byte)1, (byte)1,
-						// 4 enumerators
-						(byte)0, (byte)0, (byte)0, (byte)0,
-						(byte)0, (byte)1, (byte)0, (byte)0,
-						// A
-						(byte)0, (byte)1, (byte)0, (byte)0,
-						(byte)0, (byte)0, (byte)0, (byte)1,
-						// \0
-						(byte)0, (byte)0, (byte)0, (byte)0,
-						(byte)0, (byte)0, (byte)0, (byte)0,
-						// B
-						(byte)0, (byte)1, (byte)0, (byte)0,
-						(byte)0, (byte)0, (byte)1, (byte)0,
-						// \0
-						(byte)0, (byte)0, (byte)0, (byte)0,
-						(byte)0, (byte)0, (byte)0, (byte)0,
-						// C
-						(byte)0, (byte)1, (byte)0, (byte)0,
-						(byte)0, (byte)0, (byte)1, (byte)1,
-						// \0
-						(byte)0, (byte)0, (byte)0, (byte)0,
-						(byte)0, (byte)0, (byte)0, (byte)0,
-						// D
-						(byte)0, (byte)1, (byte)0, (byte)0,
-						(byte)0, (byte)1, (byte)0, (byte)0,
-						// \0
-						(byte)0, (byte)0, (byte)0, (byte)0,
-						(byte)0, (byte)0, (byte)0, (byte)0,
-
-					// enum kolor
-					(byte)0, (byte)1, (byte)1,
-						// 3 enumerators
-						(byte)0, (byte)0, (byte)0, (byte)0,
-						(byte)0, (byte)0, (byte)1, (byte)1,
-						// x
-						(byte)0, (byte)1, (byte)1, (byte)1,
-						(byte)1, (byte)0, (byte)0, (byte)0,
-						// \0
-						(byte)0, (byte)0, (byte)0, (byte)0,
-						(byte)0, (byte)0, (byte)0, (byte)0,
-						// y
-						(byte)0, (byte)1, (byte)1, (byte)1,
-						(byte)1, (byte)0, (byte)0, (byte)1,
-						// \0
-						(byte)0, (byte)0, (byte)0, (byte)0,
-						(byte)0, (byte)0, (byte)0, (byte)0,
-						// z
-						(byte)0, (byte)1, (byte)1, (byte)1,
-						(byte)1, (byte)0, (byte)1, (byte)0,
-						// \0
-						(byte)0, (byte)0, (byte)0, (byte)0,
-						(byte)0, (byte)0, (byte)0, (byte)0,
-				// end struct zabawka
-				(byte)1, (byte)1, (byte)0,
-				
-				// integer liczby
-				(byte)0, (byte)0, (byte)1,
-				// 8 bits long
-				(byte)0, (byte)0, (byte)0, (byte)0,
-				(byte)1, (byte)0, (byte)0, (byte)0,
-				
-				// VALUES
-				// type liczby
-				(byte)1, (byte)0,
-					// value is 7
-					(byte)0, (byte)0, (byte)0, (byte)0,
-					(byte)0, (byte)1, (byte)1, (byte)1,
-				
-				// type zabawka
-				(byte)0, (byte)1,
-					// value of rodzaj
-						// C
-						(byte)0, (byte)1, (byte)0, (byte)0,
-						(byte)0, (byte)0, (byte)1, (byte)1,
-						// \0
-						(byte)0, (byte)0, (byte)0, (byte)0,
-						(byte)0, (byte)0, (byte)0, (byte)0,
-					// value of kolor
-						// x
-						(byte)0, (byte)1, (byte)1, (byte)1,
-						(byte)1, (byte)0, (byte)0, (byte)0,
-						// \0
-						(byte)0, (byte)0, (byte)0, (byte)0,
-						(byte)0, (byte)0, (byte)0, (byte)0
-				));
-		ArrayList<Byte> output = encoder.encode("tests/EncoderTests");
-		//fail("NOT YET IMPLEMENTED");
-		assertIterableEquals(expected, output);
-		
-	}
 	
 	@Test
 	void testAppendBits() {
@@ -643,6 +538,266 @@ class EncoderTests {
 						(byte)1, (byte)1, (byte)1, (byte)1, (byte)0, (byte)1, (byte)1, (byte)0
 					));
 			ArrayList<Byte> output = encoder.encode("tests/eStructVal");
+			assertIterableEquals(expected, output);
+		}
+
+		@Test
+		void testEncodeArrayValSimple() {
+			Encoder encoder = new Encoder();
+			
+			ArrayList<Byte> expected = new ArrayList<Byte>(List.of(
+					// number of types: 1
+					(byte)0, (byte)0, (byte)0, (byte)0,
+					(byte)0, (byte)0, (byte)0, (byte)1,
+					
+					// int liczby
+					(byte)0, (byte)0, (byte)1,
+						// on 4 bits
+						(byte)0, (byte)0, (byte)0, (byte)0,
+						(byte)0, (byte)1, (byte)0, (byte)0,
+					
+					// VALUES
+					// type ARRAY
+					(byte)0,
+					// 5 elements
+					(byte)0, (byte)0, (byte)0, (byte)0,
+					(byte)0, (byte)1, (byte)0, (byte)1,
+					// type liczby is first
+					(byte)1,
+						// then values {1, 5, 7, 3, 2} in 4 bits
+						(byte)0, (byte)0, (byte)0, (byte)1,
+						
+						(byte)0, (byte)1, (byte)0, (byte)1,
+						
+						(byte)0, (byte)1, (byte)1, (byte)1,
+						
+						(byte)0, (byte)0, (byte)1, (byte)1,
+						
+						(byte)0, (byte)0, (byte)1, (byte)0
+					));
+			ArrayList<Byte> output = encoder.encode("tests/eArrayValSimple");
+			assertIterableEquals(expected, output);
+		}
+		
+		@Test
+		void testEncodeArrayValArithmetics() {
+			Encoder encoder = new Encoder();
+			
+			ArrayList<Byte> expected = new ArrayList<Byte>(List.of(
+					// number of types: 2
+					(byte)0, (byte)0, (byte)0, (byte)0,
+					(byte)0, (byte)0, (byte)1, (byte)0,
+					
+					// int liczby
+					(byte)0, (byte)0, (byte)1,
+						// on 4 bits
+						(byte)0, (byte)0, (byte)0, (byte)0,
+						(byte)0, (byte)1, (byte)0, (byte)0,
+					
+					// struct begin
+					(byte)1, (byte)0, (byte)1,
+						// int sztuk
+						(byte)0, (byte)0, (byte)1,
+							// on 8 bits
+							(byte)0, (byte)0, (byte)0, (byte)0,
+							(byte)1, (byte)0, (byte)0, (byte)0,
+					// struct end
+					(byte)1, (byte)1, (byte)0,
+						
+					// VALUES
+					// type pap is second
+					(byte)1, (byte)0,
+						// sztuk is 8
+						(byte)0, (byte)0, (byte)0, (byte)0,
+						(byte)1, (byte)0, (byte)0, (byte)0,
+					// type liczby is first
+					(byte)0, (byte)1,
+						// then value 3 in 4 bits
+						(byte)0, (byte)0, (byte)1, (byte)1,
+					// type ARRAY
+					(byte)0, (byte)0,
+					// 5 elements
+					(byte)0, (byte)0, (byte)0, (byte)0,
+					(byte)0, (byte)1, (byte)0, (byte)1,
+					// type liczby is first
+					(byte)0, (byte)1,
+						// then values {1, 5, 7, 3, 2} in 4 bits
+						(byte)0, (byte)0, (byte)0, (byte)1,
+						
+						(byte)0, (byte)1, (byte)0, (byte)1,
+						
+						(byte)0, (byte)1, (byte)1, (byte)1,
+						
+						(byte)0, (byte)0, (byte)1, (byte)1,
+						
+						(byte)0, (byte)0, (byte)1, (byte)0
+					));
+			ArrayList<Byte> output = encoder.encode("tests/eArrayValArithmetics");
+			assertIterableEquals(expected, output);
+		}
+		
+		@Test
+		void testEncodeArrayValMultiply() {
+			Encoder encoder = new Encoder();
+			
+			ArrayList<Byte> expected = new ArrayList<Byte>(List.of(
+					// number of types: 2
+					(byte)0, (byte)0, (byte)0, (byte)0,
+					(byte)0, (byte)0, (byte)1, (byte)0,
+					
+					// int liczby
+					(byte)0, (byte)0, (byte)1,
+						// on 4 bits
+						(byte)0, (byte)0, (byte)0, (byte)0,
+						(byte)0, (byte)1, (byte)0, (byte)0,
+					
+					// struct begin
+					(byte)1, (byte)0, (byte)1,
+						// int sztuk
+						(byte)0, (byte)0, (byte)1,
+							// on 8 bits
+							(byte)0, (byte)0, (byte)0, (byte)0,
+							(byte)1, (byte)0, (byte)0, (byte)0,
+					// struct end
+					(byte)1, (byte)1, (byte)0,
+						
+					// VALUES
+					// type pap is second
+					(byte)1, (byte)0,
+						// sztuk is 8
+						(byte)0, (byte)0, (byte)0, (byte)0,
+						(byte)1, (byte)0, (byte)0, (byte)0,
+					// type liczby is first
+					(byte)0, (byte)1,
+						// then value 2 in 4 bits
+						(byte)0, (byte)0, (byte)1, (byte)0,
+					// type ARRAY
+					(byte)0, (byte)0,
+					// 4 elements
+					(byte)0, (byte)0, (byte)0, (byte)0,
+					(byte)0, (byte)1, (byte)0, (byte)0,
+					// type liczby is first
+					(byte)0, (byte)1,
+						// then values {1, 5, 7, 3, 2} in 4 bits
+						(byte)0, (byte)0, (byte)0, (byte)1,
+						
+						(byte)0, (byte)1, (byte)0, (byte)1,
+						
+						(byte)0, (byte)1, (byte)1, (byte)1,
+						
+						(byte)0, (byte)0, (byte)1, (byte)1
+					));
+			ArrayList<Byte> output = encoder.encode("tests/eArrayValMultiply");
+			assertIterableEquals(expected, output);
+		}
+		
+		@Test
+		void testEncodeArrayValDivide() {
+			Encoder encoder = new Encoder();
+			
+			ArrayList<Byte> expected = new ArrayList<Byte>(List.of(
+					// number of types: 2
+					(byte)0, (byte)0, (byte)0, (byte)0,
+					(byte)0, (byte)0, (byte)1, (byte)0,
+					
+					// int liczby
+					(byte)0, (byte)0, (byte)1,
+						// on 4 bits
+						(byte)0, (byte)0, (byte)0, (byte)0,
+						(byte)0, (byte)1, (byte)0, (byte)0,
+					
+					// struct begin
+					(byte)1, (byte)0, (byte)1,
+						// int sztuk
+						(byte)0, (byte)0, (byte)1,
+							// on 8 bits
+							(byte)0, (byte)0, (byte)0, (byte)0,
+							(byte)1, (byte)0, (byte)0, (byte)0,
+					// struct end
+					(byte)1, (byte)1, (byte)0,
+						
+					// VALUES
+					// type pap is second
+					(byte)1, (byte)0,
+						// sztuk is 2
+						(byte)0, (byte)0, (byte)0, (byte)0,
+						(byte)0, (byte)0, (byte)1, (byte)0,
+					// type liczby is first
+					(byte)0, (byte)1,
+						// then value 2 in 4 bits
+						(byte)0, (byte)0, (byte)1, (byte)0,
+					// type ARRAY
+					(byte)0, (byte)0,
+					// 4 elements
+					(byte)0, (byte)0, (byte)0, (byte)0,
+					(byte)0, (byte)1, (byte)0, (byte)0,
+					// type liczby is first
+					(byte)0, (byte)1,
+						// then values {1, 5, 7, 3, 2} in 4 bits
+						(byte)0, (byte)0, (byte)0, (byte)1,
+						
+						(byte)0, (byte)1, (byte)0, (byte)1,
+						
+						(byte)0, (byte)1, (byte)1, (byte)1,
+						
+						(byte)0, (byte)0, (byte)1, (byte)1
+					));
+			ArrayList<Byte> output = encoder.encode("tests/eArrayValDivide");
+			assertIterableEquals(expected, output);
+		}
+		
+		@Test
+		void testEncodeArrayValNestedExpression() {
+			Encoder encoder = new Encoder();
+			
+			ArrayList<Byte> expected = new ArrayList<Byte>(List.of(
+					// number of types: 2
+					(byte)0, (byte)0, (byte)0, (byte)0,
+					(byte)0, (byte)0, (byte)1, (byte)0,
+					
+					// int liczby
+					(byte)0, (byte)0, (byte)1,
+						// on 4 bits
+						(byte)0, (byte)0, (byte)0, (byte)0,
+						(byte)0, (byte)1, (byte)0, (byte)0,
+					
+					// struct begin
+					(byte)1, (byte)0, (byte)1,
+						// int sztuk
+						(byte)0, (byte)0, (byte)1,
+							// on 8 bits
+							(byte)0, (byte)0, (byte)0, (byte)0,
+							(byte)1, (byte)0, (byte)0, (byte)0,
+					// struct end
+					(byte)1, (byte)1, (byte)0,
+						
+					// VALUES
+					// type pap is second
+					(byte)1, (byte)0,
+						// sztuk is 1
+						(byte)0, (byte)0, (byte)0, (byte)0,
+						(byte)0, (byte)0, (byte)0, (byte)1,
+					// type liczby is first
+					(byte)0, (byte)1,
+						// then value 1 in 4 bits
+						(byte)0, (byte)0, (byte)0, (byte)1,
+					// type ARRAY
+					(byte)0, (byte)0,
+					// 4 elements
+					(byte)0, (byte)0, (byte)0, (byte)0,
+					(byte)0, (byte)1, (byte)0, (byte)0,
+					// type liczby is first
+					(byte)0, (byte)1,
+						// then values {1, 5, 7, 3, 2} in 4 bits
+						(byte)0, (byte)0, (byte)0, (byte)1,
+						
+						(byte)0, (byte)1, (byte)0, (byte)1,
+						
+						(byte)0, (byte)1, (byte)1, (byte)1,
+						
+						(byte)0, (byte)0, (byte)1, (byte)1
+					));
+			ArrayList<Byte> output = encoder.encode("tests/eArrayValNestedExpression");
 			assertIterableEquals(expected, output);
 		}
 	}

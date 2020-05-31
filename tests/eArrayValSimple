@@ -1,0 +1,5 @@
+MESSAGE 
+TYPES 
+Integer<4> liczby; 
+VALUES 
+Liczby tablica[5] = {1, 5, 7, 3, 2};

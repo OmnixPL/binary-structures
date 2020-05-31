@@ -1,5 +1,7 @@
 package parser.arithmetics;
 
+import parser.MsgTree;
+
 public class Factor {
 	Factors which;
 	Integer number;
@@ -45,5 +47,19 @@ public class Factor {
 		}
 
 		return string.toString();
+	}
+	
+	public double evaluate(MsgTree tree) throws ArrayArithmeticException {
+		if (which == Factors.EXPRESSION) {
+			return expression.evaluate(tree);		
+		}
+		else if (which == Factors.VARIABLE) {			
+			return variable.evaluate(tree);
+		}
+		else if (which == Factors.NUMBER) {
+			return number;
+		}
+		else
+			throw new ArrayArithmeticException("Factor evaluation failed. Should be impossible.");
 	}
 }

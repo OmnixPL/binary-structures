@@ -1,0 +1,11 @@
+MESSAGE 
+TYPES 
+Integer<4> liczby;
+ 
+Struct { 
+	Integer<8> sztuk; 
+} pap; 
+VALUES
+pap lul = {2};
+Liczby xd = 2;
+Liczby tablica[lul.sztuk * xd] = {1, 5, 7, 3};

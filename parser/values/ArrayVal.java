@@ -36,4 +36,14 @@ public class ArrayVal extends Value {
 		
 		return string.toString();
 	}
+
+	public ArrayList<Value> getValues() {
+		return values;
+	}
+
+	public Expression getElementsNo() {
+		return elementsNo;
+	}
+	
+	
 }
