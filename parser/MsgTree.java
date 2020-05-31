@@ -12,6 +12,11 @@ public class MsgTree {
 		types = new ArrayList<Type>();
 		values = new ArrayList<Value>();
 	}
+	
+	public MsgTree(ArrayList<Type> types, ArrayList<Value> values) {
+		this.types = types;
+		this.values = values;
+	}
 
 	public void printTree() {
 		System.out.println("------------- TYPES");

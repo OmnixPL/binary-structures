@@ -1,0 +1,7 @@
+MESSAGE 
+
+TYPES 
+Integer<3> liczby; 
+
+VALUES 
+liczby xd = 5;

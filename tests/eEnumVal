@@ -1,0 +1,7 @@
+MESSAGE 
+
+TYPES
+Enum {"po", "pop", "popp"} typ; 
+
+VALUES
+typ klocki = "popp";

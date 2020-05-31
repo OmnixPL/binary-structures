@@ -3,13 +3,13 @@ package parser.types;
 import java.util.ArrayList;
 
 public class NewChoice extends Type {
-	NewEnum choice;
+	NewEnum choosingEnum;
 	ArrayList<String> values;
 	
 	public NewChoice(String identifier, NewEnum choosingEnum, ArrayList<String> values) {
 		super(Types.CHOICE, identifier);
 		this.values = values;
-		this.choice = choosingEnum;
+		this.choosingEnum = choosingEnum;
 	}
 
 	public String toString(int indents) {
@@ -19,7 +19,7 @@ public class NewChoice extends Type {
 		for (int i = 0; i < indents; i++)
 			indent.append(" ");
 		
-		string.append(indent + "⌞" + getType() + ": " + getIdentifier() + " chosen by: " + choice.getIdentifier() +  "\n");
+		string.append(indent + "⌞" + getType() + ": " + getIdentifier() + " chosen by: " + choosingEnum.getIdentifier() +  "\n");
 		
 		indent.append(" ");
 		indent.append(" ");
@@ -30,8 +30,8 @@ public class NewChoice extends Type {
 		return string.toString();
 	}
 
-	public NewEnum getChoice() {
-		return choice;
+	public NewEnum getChoosingEnum() {
+		return choosingEnum;
 	}
 
 	public ArrayList<String> getValues() {

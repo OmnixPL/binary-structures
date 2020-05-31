@@ -1,0 +1,8 @@
+MESSAGE 
+
+TYPES 
+String tekst;
+
+VALUES 
+
+Tekst wierszyk = "ASCII horror"; 

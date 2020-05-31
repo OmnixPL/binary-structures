@@ -1,0 +1,15 @@
+MESSAGE 
+TYPES 
+
+Enum {"TYP A", "TYP STRING"} typ; 
+Double ulamek; 
+String tekst; 
+
+Choice<typ> { 
+	ulamek; 
+	tekst; 
+} choiceNaZewnatrz; 
+
+VALUES
+
+choiceNaZewnatrz dziala = "TYP STRING" "wystarczy";

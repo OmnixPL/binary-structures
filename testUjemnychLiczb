@@ -1,0 +1,11 @@
+MESSAGE 
+
+TYPES 
+
+Integer<8> liczby; 
+Double ulamek; 
+VALUES 
+
+liczby xd = -7;
+ulamek cwierc = -0.25;
+

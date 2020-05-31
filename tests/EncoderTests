@@ -1,0 +1,16 @@
+MESSAGE 
+
+TYPES 
+
+Struct { 
+	Enum {"A", "B", "C", "D"} rodzaj; 
+	Enum {"x", "y", "z"} kolor; 
+} zabawka; 
+
+Integer<8> liczby; 
+
+VALUES 
+
+liczby xd = 7;
+
+zabawka element = { "C", "x" };

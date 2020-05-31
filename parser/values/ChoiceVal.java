@@ -5,13 +5,13 @@ import parser.types.Type;
 import parser.types.Types;
 
 public class ChoiceVal extends Value {
-	Type choice;
-	Value value;
+	Type chosenType;	// this is the type that was chosen by string in code
+	Value value;		// this is value assigned to chosenType
 
-	public ChoiceVal(NewChoice type, String identifier, Type choice, Value value) {
+	public ChoiceVal(NewChoice type, String identifier, Type chosenType, Value value) {
 		super(identifier, Types.CHOICE);
-		this.type = type;
-		this.choice = choice;
+		this.type = type;	// this is NewChoice, declaration of this value
+		this.chosenType = chosenType;
 		this.value = value;
 	}
 	
@@ -29,8 +29,8 @@ public class ChoiceVal extends Value {
 		return string.toString();
 	}
 
-	public Type getChoice() {
-		return choice;
+	public Type getChosenType() {
+		return chosenType;
 	}
 
 	public Value getValue() {

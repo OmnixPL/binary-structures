@@ -1,0 +1,20 @@
+MESSAGE 
+
+TYPES 
+
+Struct { 
+	Enum {"kotek", "mis", "lalka", "samochodzik"} rodzaj; 
+	String firma; 
+	Integer<8> sztuk; 
+	Double pap;
+} zabawka; 
+
+VALUES 
+
+zabawka hops = {
+	"mis",
+	"Testowansko",
+	45,
+	6.99
+};
+

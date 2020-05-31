@@ -1,0 +1,6 @@
+MESSAGE 
+TYPES
+Double ulamek; 
+
+VALUES 
+ulamek cwierc = 0.25;
