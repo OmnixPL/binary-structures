@@ -491,10 +491,20 @@ public class Parser {
 	}
 	
 	private IntegerVal parseIntegerVal(String identifier, Type type) throws ParserException {
+		boolean isNegative = false;
+		if (currenToken.getTokenName() == Tokens.ADDITIVE_OP) {
+			if (currenToken.getMsg().equalsIgnoreCase("-"))
+				isNegative = true;
+			consumeToken();
+		}
+		
 		if (currenToken.getTokenName() != Tokens.INT)
 			throwMessageExpected("parse integer value", "integer");
 			
 		Integer value = Integer.parseInt(currenToken.getMsg());
+		
+		if (isNegative) 
+			value = -value;
 		
 		consumeToken();
 		return new IntegerVal((NewInteger)type, identifier, value);
@@ -510,11 +520,22 @@ public class Parser {
 	}
 	
 	private DoubleVal parseDoubleVal(String identifier, Type type) throws ParserException {
+		boolean isNegative = false;
+		if (currenToken.getTokenName() == Tokens.ADDITIVE_OP) {
+			if (currenToken.getMsg().equalsIgnoreCase("-"))
+				isNegative = true;
+			consumeToken();
+		}
+		
 		if (currenToken.getTokenName() != Tokens.DOUBLE)
 			throwMessageExpected("parse double value", "double");
 		
 		Double value = Double.parseDouble(currenToken.getMsg());
 		consumeToken();
+
+		if (isNegative) 
+			value = -value;
+		
 		return new DoubleVal((NewDouble)type, identifier, value);
 	}
 	
@@ -566,20 +587,19 @@ public class Parser {
 	}
 
 	private ChoiceVal parseChoiceVal(String identifier, Type supertype) throws ParserException {
-		NewChoice typeChoice = (NewChoice) supertype;
+		NewChoice typeChoice = (NewChoice) supertype;	// declaration of type of this value
 		
-		String choiceString; // this is one of values of ENUM, that decides which type to use
+		String choiceString; // this is one of values of ENUM, that decides which type to use 
 		
 		if (currenToken.getTokenName() != Tokens.STRING)
 			throwMessageExpected("parse choice value", "enum value");
 		choiceString = currenToken.getMsg();
 		consumeToken();
 		
-		// now we look for this enumerator INDEX, because this way we translate it into object (1st enumerator corrseponds to
-		// first type in Choice)
+		// find which index this STRING has in NewEnum
 		int index = -1;
 		for (int i = 0; i < typeChoice.getValues().size(); i++) {
-			if (typeChoice.getChoice().getValues().get(i).equalsIgnoreCase(choiceString)) {
+			if (typeChoice.getChoosingEnum().getValues().get(i).equalsIgnoreCase(choiceString)) {
 				index = i;
 				break;
 			}
@@ -588,26 +608,27 @@ public class Parser {
 		if (index == -1)
 			throwMessageExpected("parse choice value", "enum value");
 		
-		// now that we have proper index, we grab the right TYPE from existing types
+		// index we just found translates into type 
+		// STRING -> index in NewEnum == index of type in NewChoice
 		String typeName = typeChoice.getValues().get(index);
-		Type type = null;
+		Type chosenType = null;
 		for (Type type2: tree.types) {
 			if (type2.getIdentifier().equalsIgnoreCase(typeName)) {
-				type = type2;
+				chosenType = type2;
 				break;
 			}
 		}
 		
-		if (type == null)
+		if (chosenType == null)
 			throwMessageExpected("parse choice value", "value of choice at same index as enumerator in enum to be a type name");
 		
 		// now that we have proper TYPE, we can parse it
-		Value value = parseRightHand(type.getIdentifier(), type);
+		Value value = parseRightHand(chosenType.getIdentifier(), chosenType);
 		
 		if (value == null)
 			throwMessage("parse choice value", "Unknown error while parsing right hand. Should never happen.");
 		
-		return new ChoiceVal(typeChoice, identifier, typeChoice, value);
+		return new ChoiceVal(typeChoice, identifier, chosenType, value);
 	}
 	
 // ----------------------- OTHER
